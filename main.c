@@ -1,9 +1,12 @@
 #include <raylib.h>
+#include <raymath.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #define WIDTH 600
 #define HEIGHT 480
+#define GRAVITY 9.8
+
 
 enum ParticleType {
     PARTICLE_EMPTY,
@@ -20,6 +23,9 @@ typedef struct {
 } Particle;
 
 void UpdateParticle(Particle** particles, const Vector2* locationsToValidate, const int particleIndex, const int size) {
+    Particle* particle = particles[particleIndex];
+    particle->velocity.y = Clamp(particle->velocity.y + (GRAVITY * GetFrameTime()), -10.f, 10.f);
+
     for (size_t i = 0; i < size; i++) {
         int index = locationsToValidate[i].y * WIDTH + locationsToValidate[i].x;
         if (index < 0 || index >= WIDTH * HEIGHT) continue;
